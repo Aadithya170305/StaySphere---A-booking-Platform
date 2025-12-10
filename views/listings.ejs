@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta-name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listings</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="nav-bar">
+        <h2 class="logo">StaySphere</h2>
+        <div class="tab-container">
+            <div class="tab-item active">
+                <i class="fa-solid fa-house"></i>
+                <span><a href="/api/listings" id="listings-id">Hotels</a></span>
+            </div>
+            <div class="divider">                
+            </div>
+            <div class="tab-item">
+                <i class="fa-solid fa-plane"></i>
+                <span><a href="/api/flightListings" id="flightlistings-id">Flights</a></span>
+            </div>
+        </div>
+        <% if (!currentUser) { %>
+            <button class="btn btn-danger" id="login"><a href="/login" class="btn btn-primary">Login</a></button>
+        <% } else { %>
+            <div class="d-flex flex-column align-items-center user-box" id="icon-id">
+                <i class="fa-regular fa-user fs-4"></i>
+                <span class="fw-bold mt-1"><%= currentUser.username %></span>
+            </div>
+            <button class="btn btn-danger" id="logout"><a href="/logout" class="btn btn-danger">Logout</a></button>
+        <% } %>
+    </div>
+   <% listings.forEach(listing => { %>
+    <div class="card">
+        <img src="<%= listing.image.url %>" />
+        <h3><%= listing.title %></h3>
+        <p><%= listing.description %></p>
+        <p class="icon-row">
+            <span class="material-icons icon">currency_rupee</span><%= listing.price %>
+        </p>
+        <p class="icon-row">
+            <span class="material-icons icon">location_on</span>
+            <%= listing.location %>, <%= listing.country %>
+        </p>
+        <div class="star-container">
+            <span class="rating-number">
+            <%= (listing.reviews ? listing.reviews.toFixed(1) : "0.0") %>
+            </span>
+            <%
+              let rating = listing.reviews || 0;
+              let full = Math.floor(rating);
+              let half = (rating % 1) !== 0;
+              let empty = 5 - full - (half ? 1 : 0);
+            %>
+           <% for (let i = 0; i < full; i++) { %>
+             <span class="star full"></span>
+           <% } %>
+           <% if (half) { %>
+            <span class="star half"></span>
+           <% } %>
+           <% for (let i = 0; i < empty; i++) { %>
+            <span class="star empty"></span>
+        <% } %>
+    </div>
+    <button class="button-class" onclick="window.location.href='/api/payments'">Book Now</button>
+    </div>
+   <% }) %>
+   <div class="footer-bar">
+    <p>Follow us on:</p>
+    <div class="icons">
+        <i class="fa-brands fa-square-instagram"></i>
+        <i class="fa-brands fa-x-twitter"></i>
+        <i class="fa-brands fa-youtube"></i>
+        <i class="fa-brands fa-facebook-f"></i>
+    </div>
+   </div>
+   <script src="/listings.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Cancelled</title>
+    <link rel="stylesheet" href="/cancel-order.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Cancelled</h1>
+        <p>Your order has been cancelled.</p>
+
+        <% if (token) { %>
+            <p class="token">Token: <%= token %></p>
+        <% } %>
+
+        <button onclick="window.location.href='/api/payments'" class="home-btn">
+            Go Back to Home
+        </button>
+    </div>
+</body>
+</html>

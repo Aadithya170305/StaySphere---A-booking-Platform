@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Listings</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <h2 class="logo">StaySphere</h2>
+        <ul class="nav-links">
+          <form action="/api/flightListings" method="GET" class="filter-container">
+            <label>
+                <input type="text" name="from" placeholder="Enter departure city" required>
+            </label>
+            <label>
+                <input type="text" name="to" placeholder="Enter destination city" required>
+            </label>
+            <button type="submit" class="filter-btn">Search</button>
+          </form>
+           <button class="back-btn" onclick="window.location.href='/api/listings'">Back</button>
+        </ul>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <% if (!flightListings || flightListings.length === 0) { %>
+        <p style="text-align:center;">No flights available.</p>
+    <% } else { %>
+
+        <div class="flight-container">
+            <% flightListings.forEach(flight => { %>
+                <div class="flight-card">
+                    <div class="flight-info">
+                        <img src="<%= flight.logo?.url || '/images/default-logo.png' %>" 
+                             alt="<%= flight.airline %> logo" class="flight-logo" />
+
+                        <div class="flight-details">
+                            <div class="route"><%= flight.airline || "Unknown Airline" %> - <%= flight.flightNumber || "N/A" %></div>
+                            
+                            <div class="time-city">
+                                <b><%= flight.departureTime || "N/A" %></b> → 
+                                <b><%= flight.arrivalTime || "N/A" %></b><br>
+                                <%= flight.departure || "N/A" %> → <%= flight.arrival || "N/A" %>
+                            </div>
+
+                            <div class="duration"><%= flight.duration || "N/A" %> | Non-stop</div>
+                        </div>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price">₹<%= flight.price != null ? flight.price.toLocaleString() : "N/A" %></div>
+                        <button class="book-btn" onclick="window.location.href='/api/flight/payments?price=<%= flight.price %>&name=<%= flight.airline %>'"> BOOK NOW</button>
+                        <div class="extra-info">+ More Fare</div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</body>
+</html>

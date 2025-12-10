@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 100px;
+    background-color: #f8f9fa;
+}
+
+.container {
+    border: 1px solid #ccc;
+    padding: 40px;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #d9534f;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.token {
+    font-size: 14px;
+    color: #555;
+    word-break: break-all;
+}
+
+.home-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.home-btn:hover {
+    background-color: #cc502d;
+}
+.card{
+    background-color: #cc502d;
+}
