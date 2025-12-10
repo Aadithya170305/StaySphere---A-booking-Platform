@@ -1,5 +1,5 @@
 # StaySphere---A-booking-Platform
-A full-stack hotel and flight ticket booking platform that lets users search, book, and pay securely using PayPal. Built with a clean UI, seamless workflows, and a robust backend to ensure smooth booking experiences.
+A full-stack hotel and flight ticket booking platform(Airbnb Clone) that lets users search, book, and pay securely using PayPal. Built with a clean UI, seamless workflows, and a robust backend to ensure smooth booking experiences.
 
 I. Overview:- 
 
