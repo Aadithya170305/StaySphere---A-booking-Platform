@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  seed:
+    image: aadithya1234/staysphere-seed:latest
+    container_name: staysphere-seed
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: ["node", "seed.js"]
+    restart: "no"
+
+  app:
+    image: aadithya1234/staysphere-app:latest
+    container_name: staysphere-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      seed:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+
+volumes:
+  mongo-data:

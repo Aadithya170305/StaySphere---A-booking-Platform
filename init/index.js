@@ -1,17 +1,23 @@
-const mongoose=require("mongoose");
-const initData=require("./data.js");
-const listing=require("../models/listings.js");
-main().then(()=>{
-    console.log("connected to mongodb");
-}).catch((err)=>{
-    console.log("Error connecting to the mongodb");
-});
-async function main(){
-    await mongoose.connect("mongodb://localhost:27017/realestateDB");
+const mongoose = require("mongoose");
+const initData = require("./data.js"); 
+const Listing = require("../models/listings.js");
+async function main() {
+  try {
+    await mongoose.connect(
+      process.env.MONGO_URL || "mongodb://mongo:27017/realestateDB"
+    );
+    console.log("Connected to realestateDB");
+    await initDB();
+    process.exit(0); 
+  } 
+  catch (err) {
+    console.error("Error connecting to MongoDB:", err);
+    process.exit(1);
+  }
 }
-const initDB=async()=>{
-    await listing.deleteMany({});
-    await listing.insertMany(initData.data);
-    console.log("Data inserted successfully");
-};
-initDB();
+async function initDB() {
+  await Listing.deleteMany({});
+  await Listing.insertMany(initData.data);
+  console.log("Realestate data inserted successfully");
+}
+main();

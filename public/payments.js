@@ -1,6 +1,6 @@
 async function payNow() {
   try {
-    const res = await fetch("http://localhost:3000/api/paypal/create-order", {
+      const res = await fetch("/api/paypal/create-order", {  
       method: "POST",
     });
     const data = await res.json();

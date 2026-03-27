@@ -1,34 +1,36 @@
-const mongoose = require("mongoose");
 const express = require("express");
+const mongoose = require("mongoose");
 const path = require("path");
-const app = express();
-const PORT = 3000;
 const cors = require("cors");
-const paypalRoutes = require("./routes/paypalRoutes.js");
-const paypalFlightRoutes = require("./routes/paypalFlightRoutes.js");
-const FlightListingsModel = require("./models/flightlistings.js");
-const ListingsModel = require("./models/listings.js");
-const User = require("./models/user.js");
-const userRouter = require("./routes/user.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const flash = require("connect-flash");
+const paypalRoutes = require("./routes/paypalRoutes.js");
+const paypalFlightRoutes = require("./routes/paypalFlightRoutes.js");
+const userRouter = require("./routes/user.js");
+const FlightListingsFactory = require("./models/flightlistings.js");
+const ListingsModel = require("./models/listings.js");
+const User = require("./models/user.js");
+const app = express();
+const PORT = process.env.PORT || 3000;
+const MONGO_URL     = process.env.MONGO_URL     || "mongodb://mongo-db:27017/realestateDB";
+const FLIGHT_DB_URL = process.env.FLIGHT_DB_URL || "mongodb://mongo-db:27017/flightDB";
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/paypal", paypalRoutes);
-app.use("/api/paypal/flight", paypalFlightRoutes);
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(flash());
 app.use(
   session({
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "thisshouldbeasecret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      expires: Date.now() + 24 * 60 * 60 * 1000,
       maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
     },
   })
 );
@@ -39,8 +41,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.static("public"));
-app.use(flash());
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
@@ -48,40 +48,35 @@ app.use((req, res, next) => {
   next();
 });
 mongoose
-  .connect("mongodb://localhost:27017/realestateDB")
+  .connect(MONGO_URL)
   .then(() => console.log("Connected to realestateDB"))
-  .catch((err) => console.log("MongoDB Error:", err));
-const flightConnection = mongoose.createConnection(
-  "mongodb://localhost:27017/flightDB"
-);
-flightConnection.on("connected", () => {
-  console.log("Connected to flightDB");
-});
-app.get("/", (req, res) => {
-  req.session.user = {
-    username: "Aadithya",
-    role: "visitor",
-  };
-  res.send("Session started!");
-});
-app.get("/api/payments", (req, res) => {
-  res.render("payments"); 
-});
-app.get('/api/flight/payments',(req,res)=>{
-  res.render("Flightpayments");
-});
+  .catch((err) => console.error("RealEstate DB Error:", err));
+const flightConnection = mongoose.createConnection(FLIGHT_DB_URL);
+const FlightListingsModel = FlightListingsFactory(flightConnection);
+flightConnection.on("connected", () => console.log("Connected to flightDB"));
+flightConnection.on("error", (err) => console.error("Flight DB Error:", err));
+app.use("/api/paypal", paypalRoutes);
+app.use("/api/paypal/flight", paypalFlightRoutes);
+app.get("/", (req, res) => res.redirect("/api/listings"));
+
 app.get("/api/listings", async (req, res) => {
-  const listings = await ListingsModel.find({});
-  res.render("listings", { listings });
+  try {
+    const listings = await ListingsModel.find({});
+    res.render("listings", { listings });
+  } catch (err) {
+    console.error("Listings error:", err);
+    res.render("listings", { listings: [] });
+  }
 });
+
 app.get("/api/flightListings", async (req, res) => {
   try {
     const { from, to } = req.query;
     let query = {};
     if (from && to) {
       query = {
-        departure: { $regex: from, $options: "i" }, 
-        arrival: { $regex: to, $options: "i" }
+        departure: { $regex: from, $options: "i" },
+        arrival:   { $regex: to,   $options: "i" },
       };
     }
     const flightListings = await FlightListingsModel.find(query);
@@ -91,28 +86,27 @@ app.get("/api/flightListings", async (req, res) => {
     res.render("flightListings", { flightListings: [] });
   }
 });
-app.get("/signup", (req, res) => {
-  res.render("signup");
-});
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-app.post("/users/signup", async (req, res) => {
+app.get("/api/payments", (req, res) => res.render("payments"));
+app.get("/api/flight/payments", (req, res) => res.render("Flightpayments"));
+app.get("/api/signup", (req, res) => res.render("signup"));
+app.get("/api/login",  (req, res) => res.render("login"));
+app.post("/api/signup", async (req, res, next) => {
   try {
-    let { username, email, password } = req.body;
+    const { username, email, password } = req.body;
     const newUser = new User({ username, email });
     await User.register(newUser, password);
-    req.flash("success", "Welcome to StaySphere!!!");
-    return res.redirect("/login");
+    req.flash("success", "Account created successfully! Please log in.");
+    res.redirect("/api/login");   
   } catch (err) {
-    console.log(err);
     req.flash("error", err.message);
-    return res.redirect("/signup");
+    res.redirect("/api/signup");
   }
 });
 
-app.post( "/login", passport.authenticate("local", {
-    failureRedirect: "/signup",
+app.post(
+  "/api/login",
+  passport.authenticate("local", {
+    failureRedirect: "/api/login",   
     failureFlash: true,
   }),
   (req, res) => {
@@ -120,14 +114,14 @@ app.post( "/login", passport.authenticate("local", {
     res.redirect("/api/listings");
   }
 );
-app.get("/logout", (req, res, next) => {
-  req.logout(function (err) {
+app.get("/api/logout", (req, res, next) => {
+  req.logout((err) => {
     if (err) return next(err);
     req.flash("success", "Logged out successfully");
-    res.redirect("/login");
+    res.redirect("/api/login");    
   });
 });
 app.use("/", userRouter);
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

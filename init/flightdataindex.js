@@ -1,18 +1,24 @@
 const mongoose = require("mongoose");
 const initData = require("./flightdata.js");
-const listing = require("../models/flightlistings.js");
+const FlightListingsFactory = require("../models/flightlistings.js");
 async function main() {
   try {
-    await mongoose.connect("mongodb://localhost:27017/flightDB");
-    console.log("connected to mongodb");
-    await initDB();
-  } catch (err) {
-    console.log("Error connecting to mongodb", err);
+    const flightConnection = await mongoose.createConnection(
+      process.env.FLIGHT_DB_URL || "mongodb://mongo:27017/flightDB"
+    );
+    console.log("Connected to flightDB");
+    const FlightListing = FlightListingsFactory(flightConnection);
+    await initDB(FlightListing);
+    process.exit(0); 
+  } 
+  catch (err) {
+    console.error("Error connecting to flightDB:", err);
+    process.exit(1);
   }
 }
-const initDB = async () => {
-  await listing.deleteMany({});
-  await listing.insertMany(initData.data);
-  console.log("Data inserted successfully");
-};
+async function initDB(FlightListing) {
+  await FlightListing.deleteMany({});
+  await FlightListing.insertMany(initData.data);
+  console.log("Flight data inserted successfully");
+}
 main();

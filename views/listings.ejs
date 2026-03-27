@@ -24,13 +24,13 @@
             </div>
         </div>
         <% if (!currentUser) { %>
-            <button class="btn btn-danger" id="login"><a href="/login" class="btn btn-primary">Login</a></button>
+            <button class="btn btn-danger" id="login"><a href="/api/login" class="btn btn-primary">Login</a></button>
         <% } else { %>
             <div class="d-flex flex-column align-items-center user-box" id="icon-id">
                 <i class="fa-regular fa-user fs-4"></i>
                 <span class="fw-bold mt-1"><%= currentUser.username %></span>
             </div>
-            <button class="btn btn-danger" id="logout"><a href="/logout" class="btn btn-danger">Logout</a></button>
+            <button class="btn btn-danger" id="logout"><a href="/api/logout" class="btn btn-danger">Logout</a></button>
         <% } %>
     </div>
    <% listings.forEach(listing => { %>

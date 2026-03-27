@@ -1,20 +1,23 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const FlightSchema = new Schema({
-    airline: String,
-    flightNumber: String,
-    departure: String,
-    arrival: String,
-    departureTime: String,
-    arrivalTime: String,
-    duration: String,
-    price: Number,
-    reviews: Number,
-    logo: {
-        filename: String,
-        url: String
-    },
+const mongoose = require("mongoose");
+
+const flightSchema = new mongoose.Schema({
+  airline:       String,
+  flightNumber:  String,
+  departure:     String,
+  arrival:       String,
+  departureTime: String,
+  arrivalTime:   String,
+  duration:      String,
+  price:         Number,
+  reviews:       Number,
+  logo: {
+    filename: String,
+    url:      String,
+  },
 });
-const flightConnection = mongoose.createConnection('mongodb://localhost:27017/flightDB');
-const FlightListingsModel = flightConnection.model('flightlistings', FlightSchema);
-module.exports = FlightListingsModel;
+module.exports = function FlightListingsFactory(connection) {
+  if (connection.modelNames().includes("flightlistings")) {
+    return connection.model("flightlistings");
+  }
+  return connection.model("flightlistings", flightSchema);
+};

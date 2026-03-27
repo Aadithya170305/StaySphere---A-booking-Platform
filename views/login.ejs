@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="login-card">
-        <form action="/login" method="POST" class="needs-validation" novalidate>
+        <form action="/api/login" method="POST" class="needs-validation" novalidate>
             <h2 class="login-title">Welcome Back!</h2>
             <label class="form-label">Username</label>
             <input type="text" class="form-control login-input" name="username" required>
@@ -20,9 +20,17 @@
             <label class="form-label">Password</label>
             <input type="password" class="form-control login-input" name="password" required>
             <div class="invalid-feedback">Please enter password.</div>
-            <button type="submit" class="btn login-btn">Login</button>
-            
+            <br>
+            <button type="submit" class="btn login-btn">Login</button> 
         </form>
+        <br>
+        <br>
+        <% if (success && success.length > 0) { %>
+            <div class="flash-success"><%= success %></div>
+            <% } %>
+            <% if (error && error.length > 0) { %>
+            <div class="flash-error"><%= error %></div>
+        <% } %>
     </div>
 </body>
 </html>
