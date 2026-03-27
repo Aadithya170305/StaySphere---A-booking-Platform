@@ -57,3 +57,40 @@ Category	Technologies
 3. Database:- 	MongoDB, Mongoose
 4. Payments:- 	PayPal REST SDK
 5. Version Control:-	Git & GitHub
+
+VIII. DevOps & Deployment
+
+1. Dockerized with multi-container setup
+2. Docker Compose for orchestration
+3. Automatic database seeding on startup
+4. Hosted on Docker Hub
+
+IX. How to Run
+
+Using Docker (Recommended)
+
+1. Clone the repo
+   git clone https://github.com/Aadithya170305/StaySphere---A-booking-Platform
+
+2. Create .env file
+   cp .env.example .env
+   (Add your PayPal credentials)
+
+3. Run
+   docker-compose up
+
+4. Visit http://localhost:3000
+
+Docker Hub
+
+docker pull aadithya1234/staysphere-app:latest
+
+X. Environment Variables
+
+1. PAYPAL_CLIENT_ID=your_paypal_client_id
+2. PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+3. PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
+4. BASE_URL=http://localhost:3000
+5. SECRET=yoursecretkey
+6. MONGO_URL=mongodb://mongo-db:27017/realestateDB
+7. FLIGHT_DB_URL=mongodb://mongo-db:27017/flightDB
