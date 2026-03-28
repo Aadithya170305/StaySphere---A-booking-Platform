@@ -1,96 +1,166 @@
-# StaySphere---A-booking-Platform
-A full-stack hotel and flight ticket booking platform(Airbnb Clone) that lets users search, book, and pay securely using PayPal. Built with a clean UI, seamless workflows, and a robust backend to ensure smooth booking experiences.
+# StaySphere - A Booking Platform
 
-I. Overview:- 
+A full-stack hotel and flight ticket booking platform (Airbnb Clone) that lets users search, book, and pay securely using PayPal. Built with a clean UI, seamless workflows, and a robust backend to ensure smooth booking experiences.
+
+---
+
+## I. Overview
 
 StaySphere is an end-to-end booking system where users can:
-1.  Book Hotels
-2.  Book Flights
-3.  Make secure payments through PayPal
-4.  View booking success pages
-5.  avigate through clean UI pages built using EJS templates
-6.  Enjoy a smooth checkout experience
+1. Book Hotels
+2. Book Flights
+3. Make secure payments through PayPal
+4. View booking success pages
+5. Navigate through clean UI pages built using EJS templates
+6. Enjoy a smooth checkout experience
 
 This project integrates Node.js, Express, MongoDB, and PayPal SDK for complete booking and payment automation.
 
-II. Features
+---
 
-1. Hotel Booking
-2. Browse hotel listings
-3. View details, pricing, and availability
-4. Complete bookings with secure payment
+## II. Features
 
-III. Flight Booking
+### Hotel Booking
+- Browse hotel listings
+- View details, pricing, and availability
+- Complete bookings with secure payment
 
-1. Search flights
-2. Choose airlines & timings
-3. Instant booking confirmation
-4. PayPal Payment Integration
-5. Secure and encrypted payment processing
-6. Separate payment flows for hotels & flights
+### Flight Booking
+- Search flights by departure and destination
+- Choose airlines & timings
+- Instant booking confirmation
 
-IV. Automatic success/failure redirection
+### PayPal Payment Integration
+- Secure and encrypted payment processing
+- Separate payment flows for hotels & flights
+- Automatic success/failure redirection
 
-1. User Authentication
-2. User login & signup
-3. Secure password handling
+### User Authentication
+- User login & signup
+- Secure password handling
+- Session-based authentication
 
-V. Session-based authentication
+### Frontend (EJS + CSS)
+- Clean and responsive UI
+- Custom styles for listings, payments, and success pages
 
-1. Frontend (EJS + CSS)
-2. Clean and responsive UI
-3. Custom styles for listings, payments, and success pages
+### Database (MongoDB + Mongoose)
+- Stores user accounts
+- Flight listings
+- Hotel listings
 
-VI. Database (MongoDB + Mongoose)
+---
 
-1. Stores user accounts
-2. Flight listings
-3. Hotel listings
+## III. Tech Stack
 
+| Category | Technologies |
+|---|---|
+| Frontend | EJS, CSS, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Payments | PayPal REST SDK |
+| Version Control | Git & GitHub |
+| DevOps | Docker, Kubernetes, GitHub Actions |
 
-VII. Tech Stack
+---
 
-Category	Technologies
+## IV. DevOps & Deployment
 
-1. Frontend:- 	EJS, CSS, JavaScript
-2. Backend:- 	Node.js, Express.js
-3. Database:- 	MongoDB, Mongoose
-4. Payments:- 	PayPal REST SDK
-5. Version Control:-	Git & GitHub
+- Dockerized with multi-container setup
+- Docker Compose for local orchestration
+- Kubernetes (K8s) for container orchestration with init containers
+- CI/CD Pipeline with GitHub Actions → auto builds and pushes to Docker Hub on every push
+- Automatic database seeding on startup
+- Hosted on Docker Hub
 
-VIII. DevOps & Deployment
+---
 
-1. Dockerized with multi-container setup
-2. Docker Compose for orchestration
-3. Automatic database seeding on startup
-4. Hosted on Docker Hub
+## V. How to Run
 
-IX. How to Run
+### Option 1 — Using Docker Compose 
+```bash
+# 1. Clone the repo
+git clone https://github.com/Aadithya170305/StaySphere---A-booking-Platform
 
-Using Docker (Recommended)
+# 2. Create .env file
+cp .env.example .env
+# Add your PayPal credentials
 
-1. Clone the repo
-   git clone https://github.com/Aadithya170305/StaySphere---A-booking-Platform
+# 3. Run
+docker-compose up
 
-2. Create .env file
-   cp .env.example .env
-   (Add your PayPal credentials)
+# 4. Visit
+http://localhost:3000
+```
 
-3. Run
-   docker-compose up
+### Option 2 — Using Kubernetes (Minikube)
+```bash
+# 1. Start Minikube
+minikube start --driver=docker
 
-4. Visit http://localhost:3000
+# 2. Apply all K8s configs
+kubectl apply -f k8s/secret.yml
+kubectl apply -f k8s/mongo-deployment.yml
+kubectl apply -f k8s/mongo-service.yml
+kubectl apply -f k8s/app-deployment.yml
+kubectl apply -f k8s/app-service.yml
 
-Docker Hub
+# 3. Forward port
+kubectl port-forward service/staysphere-service 3000:3000
 
+# 4. Visit
+http://localhost:3000
+```
+
+### Option 3 — Pull from Docker Hub
+```bash
 docker pull aadithya1234/staysphere-app:latest
+```
 
-X. Environment Variables
+---
 
-1. PAYPAL_CLIENT_ID=your_paypal_client_id
-2. PAYPAL_CLIENT_SECRET=your_paypal_client_secret
-3. PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
-4. BASE_URL=http://localhost:3000
-5. SECRET=yoursecretkey
-6. MONGO_URL=mongodb://mongo-db:27017/realestateDB
-7. FLIGHT_DB_URL=mongodb://mongo-db:27017/flightDB
+## VI. CI/CD Pipeline
+
+Every push to `main` branch automatically:
+1. Installs dependencies and checks the app
+2. Builds Docker image
+3. Pushes to Docker Hub
+
+Pipeline: `GitHub → GitHub Actions → Docker Hub`
+
+---
+
+## VII. Environment Variables
+
+Create a `.env` file with the following:
+
+```env
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_client_secret
+PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com
+BASE_URL=http://localhost:3000
+SECRET=yoursecretkey
+MONGO_URL=mongodb://mongo-db:27017/realestateDB
+FLIGHT_DB_URL=mongodb://mongo-db:27017/flightDB
+```
+
+---
+
+## VIII. Project Structure
+
+```
+StaySphere/
+├── .github/workflows/    # CI/CD pipeline
+├── init/                 # Database seed data
+├── k8s/                  # Kubernetes config files
+├── models/               # Mongoose schemas
+├── public/               # Static assets (CSS, images)
+├── routes/               # Express routes
+├── services/             # PayPal service
+├── views/                # EJS templates
+├── app.js                # Main server file
+├── seed.js               # Database seeder
+├── Dockerfile
+├── docker-compose.yml
+└── .env.example
+```
