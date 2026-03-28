@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: staysphere-seed
+spec:
+  template:
+    spec:
+      containers:
+      - name: seed
+        image: aadithya1234/staysphere-seed:latest
+        command: ["node", "seed.js"]
+        envFrom:
+        - secretRef:
+            name: staysphere-secret
+      restartPolicy: OnFailure
+  backoffLimit: 3

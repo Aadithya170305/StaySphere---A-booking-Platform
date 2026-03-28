@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staysphere-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: staysphere
+  template:
+    metadata:
+      labels:
+        app: staysphere
+    spec:
+      initContainers:
+      - name: wait-for-seed
+        image: aadithya1234/staysphere-seed:latest
+        command: ["node", "seed.js"]
+        envFrom:
+        - secretRef:
+            name: staysphere-secret
+      containers:
+      - name: staysphere
+        image: aadithya1234/staysphere-app:latest
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - secretRef:
+            name: staysphere-secret
