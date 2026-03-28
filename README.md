@@ -44,7 +44,7 @@ This project integrates Node.js, Express, MongoDB, and PayPal SDK for complete b
 - Clean and responsive UI
 - Custom styles for listings, payments, and success pages
 
-### Database (MongoDB + Mongoose)
+### Database (MongoDB (Mongoose))
 - Stores user accounts
 - Flight listings
 - Hotel listings
@@ -53,14 +53,12 @@ This project integrates Node.js, Express, MongoDB, and PayPal SDK for complete b
 
 ## III. Tech Stack
 
-| Category | Technologies |
-|---|---|
-| Frontend | EJS, CSS, JavaScript |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Payments | PayPal REST SDK |
-| Version Control | Git & GitHub |
-| DevOps | Docker, Kubernetes, GitHub Actions |
+Frontend :- S, CSS, JavaScript 
+Backend :- Node.js, Express.js 
+Database :- MongoDB, Mongoose 
+Payments :- PayPal REST SDK 
+Version Control :- Git & GitHub 
+DevOps :- Docker, Kubernetes, GitHub Actions 
 
 ---
 
