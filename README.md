@@ -53,14 +53,14 @@ This project integrates Node.js, Express, MongoDB, and PayPal SDK for complete b
 
 ## III. Tech Stack
 
-Frontend :- S, CSS, JavaScript 
-Backend :- Node.js, Express.js 
-Database :- MongoDB, Mongoose 
-Payments :- PayPal REST SDK 
-Version Control :- Git & GitHub 
-DevOps :- Docker, Kubernetes, GitHub Actions 
-
----
+| Category | Technologies |
+|---|---|
+| Frontend | EJS, CSS, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Payments | PayPal REST SDK |
+| Version Control | Git & GitHub |
+| DevOps | Docker, Kubernetes, GitHub Actions |
 
 ## IV. DevOps & Deployment
 
